@@ -1,0 +1,7 @@
+out
+cache
+result
+.env
+dependencies
+remappings.txt
+.pre-commit-config.yaml
