@@ -22,13 +22,7 @@ struct GeneratedContract {
 }
 
 /// @title Build
-/// @notice Generates the deterministic-deploy pins for every contract this
-/// repo deploys. `run()` and `cutRelease()` are inherited from `BuildScript`.
-///
-/// The alias lib always points at `candidate`, so `LibExtrospectDeploy`
-/// resolves against what this repo currently compiles. The frozen `<tag>/`
-/// directories are what `ExtrospectDeploySuites.releasedSuites()` enumerates.
-///
+/// @notice Generates the deploy pins for every contract this repo deploys.
 /// `generatedContracts()` is the only list, read by every hook below.
 contract Build is BuildScript, ExtrospectDeploySuites {
     /// Every contract this repo generates deploy pins for.
@@ -43,7 +37,7 @@ contract Build is BuildScript, ExtrospectDeploySuites {
 
     /// @inheritdoc BuildScript
     /// @dev In declaration order — the order the aggregate emits its entries
-    /// in. Read by the freeze and the aggregate.
+    /// in.
     function snapshotContractNames() internal pure override returns (string[] memory) {
         GeneratedContract[] memory contracts = generatedContracts();
         string[] memory names = new string[](contracts.length);

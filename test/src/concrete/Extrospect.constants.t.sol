@@ -13,21 +13,18 @@ import {
 } from "src/generated/candidate/Extrospect.sol";
 import {LibRainDeploy} from "rain-deploy-0.1.7/src/lib/LibRainDeploy.sol";
 
-/// @dev The address the V1 `Extrospect` deployment is live at: what the
-/// hand-written `EXTROSPECT_ZOLTU_ADDRESS_V1` constant pinned before the
-/// generated snapshot subsumed it. The generated candidate MUST derive this
-/// address for as long as the source still compiles to the deployed V1
-/// bytecode — a drift here is a new deployment, not a constant to update.
+/// @dev The address the V1 `Extrospect` deployment is live at. The generated
+/// candidate MUST derive this address for as long as the source still
+/// compiles to the deployed V1 bytecode — a drift here is a new deployment,
+/// not a constant to update.
 address constant EXTROSPECT_ZOLTU_ADDRESS_V1 = address(0x1BE878af679C1a0A6AC15108b0F4398de1f94506);
 
-/// @dev The runtime codehash of the V1 deployment: what the hand-written
-/// `EXTROSPECT_RUNTIME_CODEHASH_V1` constant pinned.
+/// @dev The runtime codehash of the V1 deployment.
 bytes32 constant EXTROSPECT_RUNTIME_CODEHASH_V1 = 0x6f34c52c30411783d48eb81ac33c9cf7c108e61f86b2c5403ad49c8680cc71cf;
 
-/// @dev `keccak256` of the V1 creation bytecode: the hash of the hand-written
-/// `EXTROSPECT_CREATION_BYTECODE_V1` constant's exact bytes. Pinned as a hash
-/// because the bytes themselves now live in the generated snapshot, and a
-/// second copy here would be a second source of truth.
+/// @dev `keccak256` of the V1 creation bytecode. Pinned as a hash because the
+/// bytes themselves live in the generated snapshot, and a second copy here
+/// would be a second source of truth.
 bytes32 constant EXTROSPECT_CREATION_KECCAK_V1 = 0x5a56765a85cfcb3d9ca721de9dce9f1eb770ee9c7b873b50bd7727c20a344efd;
 
 /// @title ExtrospectConstantsTest
@@ -41,8 +38,7 @@ contract ExtrospectConstantsTest is Test {
     /// The generated candidate IS the V1 deployment, byte for byte: the
     /// recorded creation code hashes to the V1 creation bytecode's hash, the
     /// recorded address is the V1 address and the recorded codehash is the V1
-    /// runtime codehash. This is what justified retiring the hand-written
-    /// `EXTROSPECT_*_V1` constants into the generated snapshot.
+    /// runtime codehash.
     function testGeneratedCandidateIsTheV1Deployment() external pure {
         assertEq(
             keccak256(CREATION_CODE),

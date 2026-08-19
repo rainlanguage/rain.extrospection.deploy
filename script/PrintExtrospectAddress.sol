@@ -6,8 +6,7 @@ import {Script, console2} from "forge-std-1.16.2/src/Script.sol";
 import {LibExtrospectDeploy} from "../src/lib/LibExtrospectDeploy.sol";
 
 /// @title PrintExtrospectAddress
-/// @notice Emits `Extrospect`'s deterministic deploy address — aliased by
-/// `LibExtrospectDeploy` from the generated candidate snapshot — so CI can
+/// @notice Emits `Extrospect`'s deterministic deploy address so CI can
 /// capture the address without hardcoding it in workflow YAML.
 contract PrintExtrospectAddress is Script {
     function run() external pure {

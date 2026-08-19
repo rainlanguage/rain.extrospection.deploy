@@ -11,26 +11,18 @@ import {BuildHarness} from "test/concrete/BuildHarness.sol";
 import {LibStringSet} from "test/lib/LibStringSet.sol";
 
 /// @title BuildTest
-/// @notice `script/Build.sol`'s own declaration.
-///
-/// `Build`'s NatSpec argues that "one list, three readers" makes a contract
-/// silently absent from a release impossible. That is true of the readers
-/// INSIDE `Build` — the regeneration, both lib writers and the freeze all read
-/// `generatedContracts()` — and false of the boundary: what this repo deploys
-/// is declared in `ExtrospectDeploySuites.candidateSuites()`, and the
+/// @notice `script/Build.sol`'s own declaration. `generatedContracts()` is
+/// one list for every reader INSIDE `Build`, but what this repo deploys is
+/// declared in `ExtrospectDeploySuites.candidateSuites()`, and the
 /// generator's list is a second hard-coded array in a second file.
 ///
 /// A candidate dropped from `generatedContracts()` by a refactor or a merge
 /// still compiles, because its committed snapshot is still there and still
-/// imported. `cutRelease()` then freezes only the contracts the generator
-/// names, `regenerateLibs()` writes a released-suites lib only for those, and
-/// the release permanently omits that contract. Nothing downstream can see it:
-/// `testEveryFrozenSnapshotIsReleased` walks record -> declaration, so a record
-/// entry never written is invisible to it, and `ExtrospectDeployChainTest` is
-/// never handed the omitted suite. `SnapshotAlreadyFrozen` then makes the hole
-/// unrepairable, because the tag has been cut.
-///
-/// So the agreement of the two lists is asserted here, along with the three
+/// imported — and every release cut after that permanently omits it, with
+/// nothing downstream able to see the hole: `testEveryFrozenSnapshotIsReleased`
+/// walks record -> declaration, so a record entry never written is invisible
+/// to it, and `ExtrospectDeployChainTest` is never handed the omitted suite.
+/// So the agreement of the two lists is asserted here, along with the
 /// properties of the generator's own entries that decide which file each
 /// contract's pins are written into.
 ///
@@ -48,14 +40,9 @@ contract BuildTest is Test {
     }
 
     /// PROPERTY: the generator's list and the deploy declaration are the SAME
-    /// SET of contracts, matched both ways. A candidate the generator does not
-    /// name is a contract silently absent from every release cut from here, and
-    /// neither the frozen-record check nor the chain check can see it, because
-    /// both are only ever handed what was written.
-    ///
-    /// Matched by the suite key rather than by index, because `Build` reaches
-    /// candidates by name for exactly this reason and a positional pass would
-    /// go green on a reordered list that had silently swapped two contracts.
+    /// SET of contracts, matched both ways — by the suite key rather than by
+    /// index, because a positional pass would go green on a reordered list
+    /// that had silently swapped two contracts.
     function testGeneratedContractsAreExactlyTheDeclaredCandidates() external view {
         GeneratedContract[] memory generated = sBuild.externalGeneratedContracts();
         DeployCandidate[] memory candidates = sBuild.externalCandidateSuites();
@@ -101,12 +88,8 @@ contract BuildTest is Test {
     }
 
     /// PROPERTY: the names a release freezes are EXACTLY the generator's
-    /// contracts.
-    ///
-    /// `snapshotContractNames()` is the list `cutRelease()` hands `freeze`, and
-    /// it is the only thing that decides what a release records. A generated
-    /// contract missing from it is regenerated on every push and then absent
-    /// from the frozen tag, which `SnapshotAlreadyFrozen` makes unrepairable.
+    /// contracts. A generated contract missing from `snapshotContractNames()`
+    /// is regenerated on every push and then absent from the frozen tag.
     function testSnapshotContractNamesAreTheGeneratedContracts() external view {
         GeneratedContract[] memory generated = sBuild.externalGeneratedContracts();
         string[] memory names = sBuild.externalSnapshotContractNames();
@@ -206,15 +189,11 @@ contract BuildTest is Test {
     }
 
     /// PROPERTY: `snapshotContractNames()` is every `generatedContracts()`
-    /// entry's `contractName`, positionally.
-    ///
-    /// It is the list `cutRelease` freezes and the list the aggregate is
-    /// emitted from, and both reach it only through `forge script`. A name
-    /// list shorter than the declaration freezes one contract fewer and emits
-    /// an aggregate that declares that contract's releases as nothing at all,
-    /// and every other assertion here is still green: the tests above read
-    /// `generatedContracts()` and the committed file, neither of which this
-    /// list passes through.
+    /// entry's `contractName`, positionally. The freeze and the aggregate
+    /// reach it only through `forge script`, so a name list shorter than the
+    /// declaration freezes one contract fewer while every other assertion
+    /// here stays green: the tests above read `generatedContracts()` and the
+    /// committed file, neither of which this list passes through.
     function testSnapshotContractNamesAreTheDeclarationInOrder() external view {
         GeneratedContract[] memory generated = sBuild.externalGeneratedContracts();
         string[] memory names = sBuild.externalSnapshotContractNames();

@@ -50,8 +50,7 @@ Releases are manual `sol-v*` tags, never merges. `package-release.yaml` runs
 freezes it as `src/generated/<tag>/`, regenerates the released-suites libs from
 the record that now holds the release, verifies the live chains against the
 fresh pins, publishes `rain-extrospection-deploy` to Soldeer and commits the
-frozen record back to `main`. Adopting this record and lane is the work tracked
-by rainlanguage/rain.extrospection#44.
+frozen record back to `main`.
 
 The on-chain deploy is separate and human-dispatched, run BEFORE tagging: the
 `Manual sol artifacts` workflow runs `script/Deploy.sol` for the `extrospect`
