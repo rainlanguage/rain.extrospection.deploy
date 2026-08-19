@@ -29,10 +29,9 @@ Nothing publishes on merge, and there is no release workflow yet, so pushing a
 `sol-v*` tag does nothing. `rainix-tag-release` takes a required
 `snapshot-generate-cmd` that regenerates a frozen `src/generated/<tag>/` deploy
 record, and the library that generates one — `LibRainDeploySnapshot` in
-[`rain.deploy`](https://github.com/rainlanguage/rain.deploy) — is on that repo's
-`main` and in no published revision (latest `rain-deploy` is 0.1.5, cut
-2026-07-30). Wiring the release lane is part of adopting that record, tracked by
-rainlanguage/rain.extrospection#44.
+[`rain.deploy`](https://github.com/rainlanguage/rain.deploy) — ships in the
+`rain-deploy` 0.1.7 revision this repo pins. Wiring the release lane is part of
+adopting that record, tracked by rainlanguage/rain.extrospection#44.
 
 The on-chain deploy is separate and human-dispatched: the `Manual sol artifacts`
 workflow runs `script/Deploy.sol` for the `extrospect` suite.

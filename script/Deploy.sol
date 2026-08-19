@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Script} from "forge-std-1.16.1/src/Script.sol";
-import {LibRainDeploy} from "rain-deploy-0.1.5/src/lib/LibRainDeploy.sol";
+import {Script} from "forge-std-1.16.2/src/Script.sol";
+import {LibRainDeploy} from "rain-deploy-0.1.7/src/lib/LibRainDeploy.sol";
 import {
     EXTROSPECT_CREATION_BYTECODE_V1,
     EXTROSPECT_RUNTIME_CODEHASH_V1,
