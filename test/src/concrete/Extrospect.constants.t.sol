@@ -3,88 +3,111 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.2/src/Test.sol";
+import {Extrospect} from "src/concrete/Extrospect.sol";
 import {
-    Extrospect,
-    EXTROSPECT_ZOLTU_ADDRESS_V1,
-    EXTROSPECT_RUNTIME_CODEHASH_V1,
-    EXTROSPECT_CREATION_BYTECODE_V1
-} from "src/concrete/Extrospect.sol";
+    BYTECODE_HASH,
+    CREATION_CODE,
+    DEPENDENCIES,
+    DEPLOYED_ADDRESS,
+    RUNTIME_CODE
+} from "src/generated/candidate/Extrospect.sol";
 import {LibRainDeploy} from "rain-deploy-0.1.7/src/lib/LibRainDeploy.sol";
 
+/// @dev The address the V1 `Extrospect` deployment is live at: what the
+/// hand-written `EXTROSPECT_ZOLTU_ADDRESS_V1` constant pinned before the
+/// generated snapshot subsumed it. The generated candidate MUST derive this
+/// address for as long as the source still compiles to the deployed V1
+/// bytecode — a drift here is a new deployment, not a constant to update.
+address constant EXTROSPECT_ZOLTU_ADDRESS_V1 = address(0x1BE878af679C1a0A6AC15108b0F4398de1f94506);
+
+/// @dev The runtime codehash of the V1 deployment: what the hand-written
+/// `EXTROSPECT_RUNTIME_CODEHASH_V1` constant pinned.
+bytes32 constant EXTROSPECT_RUNTIME_CODEHASH_V1 = 0x6f34c52c30411783d48eb81ac33c9cf7c108e61f86b2c5403ad49c8680cc71cf;
+
+/// @dev `keccak256` of the V1 creation bytecode: the hash of the hand-written
+/// `EXTROSPECT_CREATION_BYTECODE_V1` constant's exact bytes. Pinned as a hash
+/// because the bytes themselves now live in the generated snapshot, and a
+/// second copy here would be a second source of truth.
+bytes32 constant EXTROSPECT_CREATION_KECCAK_V1 = 0x5a56765a85cfcb3d9ca721de9dce9f1eb770ee9c7b873b50bd7727c20a344efd;
+
 /// @title ExtrospectConstantsTest
-/// @notice Pin the Extrospect deploy constants — creation bytecode,
-/// deterministic Zoltu address, runtime codehash — so the deploy script
-/// and downstream consumers can rely on them as source of truth. If any
-/// fails the constant must be updated to match the current source.
+/// @notice Ties the generated candidate snapshot to the existing V1
+/// deployment and to the compiler's current output, so the snapshot cannot
+/// drift from either without failing loud.
 /// @dev These pin compiler output, not behaviour: they fail for any edit to
 /// any source file reachable from `Extrospect`. The `mutation` foundry
 /// profile excludes this contract by name.
 contract ExtrospectConstantsTest is Test {
-    /// `EXTROSPECT_CREATION_BYTECODE_V1` matches the current compiler
-    /// output. Compiler/optimizer settings affect creation bytecode, so
-    /// any drift here forces an explicit constant update before the
-    /// downstream pins (address + runtime hash) can hold.
+    /// The generated candidate IS the V1 deployment, byte for byte: the
+    /// recorded creation code hashes to the V1 creation bytecode's hash, the
+    /// recorded address is the V1 address and the recorded codehash is the V1
+    /// runtime codehash. This is what justified retiring the hand-written
+    /// `EXTROSPECT_*_V1` constants into the generated snapshot.
+    function testGeneratedCandidateIsTheV1Deployment() external pure {
+        assertEq(
+            keccak256(CREATION_CODE),
+            EXTROSPECT_CREATION_KECCAK_V1,
+            "generated creation code is not the V1 creation bytecode"
+        );
+        assertEq(DEPLOYED_ADDRESS, EXTROSPECT_ZOLTU_ADDRESS_V1, "generated address is not the V1 Zoltu address");
+        assertEq(BYTECODE_HASH, EXTROSPECT_RUNTIME_CODEHASH_V1, "generated codehash is not the V1 runtime codehash");
+    }
+
+    /// The recorded creation code matches the current compiler output, so the
+    /// V1 tie above is a statement about the contract this repo compiles and
+    /// not about a stale snapshot.
     function testExtrospectCreationBytecode() external pure {
         assertEq(
-            keccak256(EXTROSPECT_CREATION_BYTECODE_V1),
+            keccak256(CREATION_CODE),
             keccak256(type(Extrospect).creationCode),
-            "EXTROSPECT_CREATION_BYTECODE_V1 drifted from compiler output"
+            "generated creation code drifted from compiler output"
         );
     }
 
-    /// Deterministic CREATE2 address derived from the pinned creation
-    /// bytecode plus Zoltu factory + salt(0). Pinned in source so the
-    /// deploy script doesn't need an out-of-band env var.
-    function testExtrospectZoltuAddress() external pure {
-        address actual = address(
-            uint160(
-                uint256(
-                    keccak256(
-                        abi.encodePacked(
-                            bytes1(0xff),
-                            LibRainDeploy.ZOLTU_FACTORY,
-                            bytes32(0),
-                            keccak256(EXTROSPECT_CREATION_BYTECODE_V1)
-                        )
-                    )
-                )
-            )
-        );
-        assertEq(actual, EXTROSPECT_ZOLTU_ADDRESS_V1, "EXTROSPECT_ZOLTU_ADDRESS_V1 drifted from creation bytecode");
-    }
-
-    /// Runtime codehash pinned for post-deploy verification.
+    /// The recorded runtime code matches the current compiler output and
+    /// hashes to the recorded codehash.
     function testExtrospectRuntimeCodehash() external pure {
-        bytes32 actual = keccak256(type(Extrospect).runtimeCode);
-        assertEq(actual, EXTROSPECT_RUNTIME_CODEHASH_V1, "EXTROSPECT_RUNTIME_CODEHASH_V1 drifted from runtime bytecode");
+        assertEq(
+            keccak256(RUNTIME_CODE),
+            keccak256(type(Extrospect).runtimeCode),
+            "generated runtime code drifted from compiler output"
+        );
+        assertEq(keccak256(RUNTIME_CODE), BYTECODE_HASH, "generated codehash drifted from generated runtime code");
     }
 
-    /// The three pinned constants describe one deployment, so they must agree
-    /// with each other when the pinned creation bytecode is actually executed.
-    /// Running it through the real Zoltu factory bytecode lands at
-    /// `EXTROSPECT_ZOLTU_ADDRESS_V1` and leaves code hashing to
-    /// `EXTROSPECT_RUNTIME_CODEHASH_V1`, and that runtime code is byte for byte
-    /// `type(Extrospect).runtimeCode`. Deterministic and offline: the factory is
-    /// etched from its own pinned bytecode, so no network is involved.
+    /// Deterministic CREATE2 address derived from the recorded creation
+    /// bytecode plus Zoltu factory + salt(0) equals the recorded address.
+    function testExtrospectZoltuAddress() external pure {
+        assertEq(
+            LibRainDeploy.zoltuAddress(CREATION_CODE),
+            DEPLOYED_ADDRESS,
+            "generated address drifted from generated creation bytecode"
+        );
+    }
+
+    /// `Extrospect` reads nothing and calls nothing at construction, so the
+    /// snapshot records no dependency that must already be on chain.
+    function testExtrospectDependenciesEmpty() external pure {
+        assertEq(abi.decode(DEPENDENCIES, (address[])).length, 0, "generated snapshot records a dependency");
+    }
+
+    /// The recorded constants describe one deployment, so they must agree
+    /// with each other when the recorded creation bytecode is actually
+    /// executed. Running it through the real Zoltu factory bytecode lands at
+    /// the V1 address and leaves code hashing to the V1 codehash, and that
+    /// runtime code is byte for byte both `RUNTIME_CODE` and
+    /// `type(Extrospect).runtimeCode`. Deterministic and offline: the factory
+    /// is etched from its own pinned bytecode, so no network is involved.
     function testExtrospectDeployRecordReproduces() external {
         LibRainDeploy.etchZoltuFactory(vm);
 
-        address deployed = LibRainDeploy.deployZoltu(EXTROSPECT_CREATION_BYTECODE_V1);
+        address deployed = LibRainDeploy.deployZoltu(CREATION_CODE);
 
+        assertEq(deployed, EXTROSPECT_ZOLTU_ADDRESS_V1, "recorded creation bytecode does not deploy to the V1 address");
         assertEq(
-            deployed,
-            EXTROSPECT_ZOLTU_ADDRESS_V1,
-            "pinned creation bytecode does not deploy to EXTROSPECT_ZOLTU_ADDRESS_V1"
+            deployed.codehash, EXTROSPECT_RUNTIME_CODEHASH_V1, "deployed runtime code does not hash to the V1 codehash"
         );
-        assertEq(
-            deployed.codehash,
-            EXTROSPECT_RUNTIME_CODEHASH_V1,
-            "deployed runtime code does not hash to EXTROSPECT_RUNTIME_CODEHASH_V1"
-        );
-        assertEq(
-            deployed.code,
-            type(Extrospect).runtimeCode,
-            "deployed runtime code differs from type(Extrospect).runtimeCode"
-        );
+        assertEq(deployed.code, RUNTIME_CODE, "deployed runtime code differs from the recorded runtime code");
+        assertEq(deployed.code, type(Extrospect).runtimeCode, "deployed runtime code differs from compiler output");
     }
 }

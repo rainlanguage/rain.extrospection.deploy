@@ -2,42 +2,24 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Script} from "forge-std-1.16.2/src/Script.sol";
-import {LibRainDeploy} from "rain-deploy-0.1.7/src/lib/LibRainDeploy.sol";
-import {
-    EXTROSPECT_CREATION_BYTECODE_V1,
-    EXTROSPECT_RUNTIME_CODEHASH_V1,
-    EXTROSPECT_ZOLTU_ADDRESS_V1
-} from "../src/concrete/Extrospect.sol";
-
-/// @dev Hash of the "extrospect" deployment suite string.
-bytes32 constant DEPLOYMENT_SUITE_EXTROSPECT = keccak256("extrospect");
+import {RainDeployBroadcast} from "rain-deploy-0.1.7/src/abstract/RainDeployBroadcast.sol";
+import {ExtrospectDeploySuites} from "../src/abstract/ExtrospectDeploySuites.sol";
 
 /// @title Deploy
-/// @notice Deploys `Extrospect` via the Zoltu deterministic-deployment
-/// factory across every Rain-supported network so the same address is
-/// reached on every EVM chain that has the factory. Requires
-/// `DEPLOYMENT_KEY` env var.
-contract Deploy is Script {
-    function run() external {
-        uint256 deployerPrivateKey = vm.envUint("DEPLOYMENT_KEY");
-
-        bytes32 suite = keccak256(bytes(vm.envOr("DEPLOYMENT_SUITE", string("extrospect"))));
-        if (suite == DEPLOYMENT_SUITE_EXTROSPECT) {
-            LibRainDeploy.deployAndBroadcast(
-                vm,
-                LibRainDeploy.supportedNetworks(),
-                deployerPrivateKey,
-                EXTROSPECT_CREATION_BYTECODE_V1,
-                "src/concrete/Extrospect.sol:Extrospect",
-                EXTROSPECT_ZOLTU_ADDRESS_V1,
-                EXTROSPECT_RUNTIME_CODEHASH_V1,
-                new address[](0)
-            );
-        } else {
-            revert(
-                "Invalid deployment suite specified. Please set the DEPLOYMENT_SUITE environment variable to 'extrospect'."
-            );
-        }
-    }
-}
+/// @notice The on-chain deploy. Broadcasts whichever suite `DEPLOYMENT_SUITE`
+/// names, through the Zoltu factory, to every supported network. One suite per
+/// dispatch; the `Manual sol artifacts` workflow dispatches the `extrospect`
+/// suite.
+///
+/// Empty on purpose. The suite comes from `ExtrospectDeploySuites`, which is
+/// the same declaration the verification tests inherit, and the dispatch, the
+/// key handling and the broadcast come from `RainDeployBroadcast`. A deploy
+/// repo writes its declaration and this pair of base contracts, and nothing
+/// else — no per-suite branch, no per-network list.
+///
+/// Deploying is idempotent by construction. `deployToNetworks` checks the
+/// recorded address against the creation code before it forks anything, then
+/// skips any network that already has code there, so a partial run — five
+/// chains of seven, one RPC down — is fixed by running it again rather than by
+/// unpicking anything.
+contract Deploy is ExtrospectDeploySuites, RainDeployBroadcast {}

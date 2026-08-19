@@ -33,13 +33,28 @@ Mutation and coverage campaigns: see `.claude/rules/mutation-profile.md`.
 
 ## Layout
 
-- `src/concrete/Extrospect.sol` — the deployed contract, and the three deploy
-  pins (`EXTROSPECT_ZOLTU_ADDRESS_V1`, `EXTROSPECT_RUNTIME_CODEHASH_V1`,
-  `EXTROSPECT_CREATION_BYTECODE_V1`) as file-level constants.
-- `script/Deploy.sol` — the Zoltu deploy script for the `extrospect` suite.
-- `script/PrintExtrospectAddress.sol` — emits the pinned address for CI.
+- `src/concrete/Extrospect.sol` — the deployed contract.
+- `src/abstract/ExtrospectDeploySuites.sol` — the ONE declaration of what this
+  repo deploys, inherited by the deploy script, the build script and the
+  verification tests. `src/abstract/RainDeploySuitesBase.sol` re-exports the
+  shipped base so the generated libs' `../abstract/` import resolves.
+- `src/generated/candidate/Extrospect.sol` — the rolling deploy snapshot
+  (address, codehash, creation + runtime bytecode, dependencies), written by
+  `script/Build.sol`. NEVER edit generated files by hand. `src/generated/<tag>/`
+  directories are frozen release records, written once by `cutRelease()`.
+- `src/lib/` — generated: `LibExtrospectDeploy` (alias over the candidate pins),
+  `LibExtrospectReleased` and `LibReleasedSuites` (the released declaration,
+  emitted from the frozen record).
+- `script/Build.sol` — regenerates the snapshot and libs (`run()`), freezes a
+  release record (`cutRelease()`).
+- `script/Deploy.sol` — the declaration plus `RainDeployBroadcast`; broadcasts
+  the suite `DEPLOYMENT_SUITE` names.
+- `script/PrintExtrospectAddress.sol` — emits the recorded address for CI.
 - `test/src/concrete/` — mirrors `src/` by subject path; files are named
   `Extrospect.<functionName>.t.sol`.
+- `test/src/abstract/` — `ExtrospectDeploySnapshotTest` and
+  `ExtrospectDeployChainTest` bind the declaration to the shipped
+  `RainDeployVerifySnapshot` / `RainDeployVerifyChain` abstracts.
 - `test/concrete/` — test-only fixtures. `MockBeacon`, `EmptyContract` and
   `SolidityCBORFixture` also exist in `rain.extrospection`, which needs them for
   its library tests.
@@ -61,4 +76,8 @@ Mutation and coverage campaigns: see `.claude/rules/mutation-profile.md`.
 
 Deployed via the Zoltu deployer, so the address is a pure function of the
 bytecode. A deploy is a human-dispatched run of `Manual sol artifacts`, never a
-merge. There is no release workflow yet and nothing is published: see README.md.
+merge, and comes BEFORE the tag. Releases are manual `sol-v*` tags:
+`package-release.yaml` runs `rainix-tag-release`, which cuts the frozen
+`src/generated/<tag>/` record via `script/Build.sol --sig "cutRelease()"` and
+publishes `rain-extrospection-deploy` to Soldeer. Nothing is published yet;
+`releasedSuites()` is empty until the first cut. See README.md.
