@@ -6,6 +6,14 @@ pragma solidity ^0.8.25;
 
 import {DeploySuite} from "../abstract/RainDeploySuitesBase.sol";
 
+import {
+    DEPLOYED_ADDRESS as Extrospect_0_1_0_DEPLOYED_ADDRESS,
+    BYTECODE_HASH as Extrospect_0_1_0_BYTECODE_HASH,
+    CREATION_CODE as Extrospect_0_1_0_CREATION_CODE,
+    RUNTIME_CODE as Extrospect_0_1_0_RUNTIME_CODE,
+    DEPENDENCIES as Extrospect_0_1_0_DEPENDENCIES
+} from "../generated/0_1_0/Extrospect.sol";
+
 /// @title LibExtrospectReleased
 /// @notice Every frozen release of `Extrospect`: one entry per file in
 /// the append-only `src/generated/<tag>/` record, in tag order.
@@ -26,7 +34,16 @@ library LibExtrospectReleased {
     /// Every frozen release, in tag order.
     /// @return The released suites.
     function releasedSuites() internal pure returns (DeploySuite[] memory) {
-        DeploySuite[] memory suites = new DeploySuite[](0);
+        DeploySuite[] memory suites = new DeploySuite[](1);
+        suites[0] = DeploySuite({
+            suite: "extrospect@0_1_0",
+            creationCode: Extrospect_0_1_0_CREATION_CODE,
+            storedDeployedAddress: Extrospect_0_1_0_DEPLOYED_ADDRESS,
+            storedBytecodeHash: Extrospect_0_1_0_BYTECODE_HASH,
+            storedRuntimeCode: Extrospect_0_1_0_RUNTIME_CODE,
+            artifactPath: "src/concrete/Extrospect.sol:Extrospect",
+            dependencies: abi.decode(Extrospect_0_1_0_DEPENDENCIES, (address[]))
+        });
         return suites;
     }
 }
