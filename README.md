@@ -44,13 +44,8 @@ that needs a network.
 
 ## Releases
 
-Releases are manual `sol-v*` tags, never merges. `package-release.yaml` runs
-`rainix-tag-release`, whose `snapshot-generate-cmd` runs
-`script/Build.sol --sig "cutRelease()"`: it regenerates the rolling candidate,
-freezes it as `src/generated/<tag>/`, regenerates the released-suites libs from
-the record that now holds the release, verifies the live chains against the
-fresh pins, publishes `rain-extrospection-deploy` to Soldeer and commits the
-frozen record back to `main`.
+Releases are manual `sol-v*` tags, never merges. Tagging runs
+`rainix-tag-release`, which never broadcasts; its mechanics live in rainix.
 
 The on-chain deploy is separate and human-dispatched, run BEFORE tagging: the
 `Manual sol artifacts` workflow runs `script/Deploy.sol` for the `extrospect`
