@@ -76,8 +76,5 @@ Mutation and coverage campaigns: see `.claude/rules/mutation-profile.md`.
 
 Deployed via the Zoltu deployer, so the address is a pure function of the
 bytecode. A deploy is a human-dispatched run of `Manual sol artifacts`, never a
-merge, and comes BEFORE the tag. Releases are manual `sol-v*` tags:
-`package-release.yaml` runs `rainix-tag-release`, which cuts the frozen
-`src/generated/<tag>/` record via `script/Build.sol --sig "cutRelease()"` and
-publishes `rain-extrospection-deploy` to Soldeer. `releasedSuites()` is empty
-until the first release is cut. See README.md.
+merge, and comes BEFORE the tag. Releases are manual `sol-v*` tags;
+`releasedSuites()` is empty until the first release is cut. See README.md.
