@@ -13,9 +13,8 @@ import {
 } from "src/generated/candidate/Extrospect.sol";
 import {LibRainDeploy} from "rain-deploy-0.1.7/src/lib/LibRainDeploy.sol";
 
-/// @dev The address the V2 `Extrospect` deployment will be live at: the Zoltu
-/// address of the current candidate bytecode. Not yet deployed — the next
-/// release deploys it. The V1 deployment remains live at
+/// @dev Deterministic Zoltu address recorded for the current V2 candidate
+/// bytecode. The V1 deployment remains live at
 /// 0x1BE878af679C1a0A6AC15108b0F4398de1f94506, recorded in
 /// `src/generated/0_1_0/`. The generated candidate MUST derive this address
 /// for as long as the source compiles to the V2 bytecode — a drift here is a
