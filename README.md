@@ -36,11 +36,13 @@ candidate is a snapshot of this repo's source, and every frozen
 `src/generated/<tag>/` record is declared. `ExtrospectDeployChainTest` inherits
 `RainDeployVerifyChain`, which holds every RELEASED suite live on every
 supported network — with no release cut it has no subject and forks nothing.
-`ExtrospectConstantsTest` ties the generated candidate to the live V1 deployment
-(`0x1BE878af679C1a0A6AC15108b0F4398de1f94506`) byte for byte, and executes the
-recorded creation bytecode through the Zoltu factory's own bytecode, etched
-offline. The whole record is a pure function of the creation code, so none of
-that needs a network.
+`ExtrospectConstantsTest` ties the generated candidate to the pinned V2
+deployment (`0x01A8116e07D63348c02818Af858769EaCdaF134A`, deployed by the next
+release; V1 remains live at `0x1BE878af679C1a0A6AC15108b0F4398de1f94506` and
+recorded in `src/generated/0_1_0/`) byte for byte, and executes the recorded
+creation bytecode through the Zoltu factory's own bytecode, etched offline. The
+whole record is a pure function of the creation code, so none of that needs a
+network.
 
 ## Releases
 

@@ -3,7 +3,7 @@
 pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
-import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.6/src/lib/LibExtrospectMetamorphic.sol";
+import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.13/src/lib/LibExtrospectMetamorphic.sol";
 
 contract ExtrospectCheckNotMetamorphicTest is ExtrospectEquivalence {
     /// External re-exposure of the library function so it can be reached via a

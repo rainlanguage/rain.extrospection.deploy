@@ -3,7 +3,7 @@
 pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
-import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.6/src/lib/LibExtrospectERC1167Proxy.sol";
+import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.13/src/lib/LibExtrospectERC1167Proxy.sol";
 
 contract ExtrospectIsERC1167ProxyTest is ExtrospectEquivalence {
     function testIsERC1167ProxyEquivalenceFuzz(bytes memory bytecode) external view {
