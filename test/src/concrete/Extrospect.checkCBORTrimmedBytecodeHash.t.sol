@@ -4,7 +4,7 @@ pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
 import {SOLIDITY_CBOR_RUNTIME_FIXTURE} from "test/concrete/SolidityCBORFixture.sol";
-import {LibExtrospectBytecode} from "rain-extrospection-0.1.6/src/lib/LibExtrospectBytecode.sol";
+import {LibExtrospectBytecode} from "rain-extrospection-0.1.13/src/lib/LibExtrospectBytecode.sol";
 
 contract ExtrospectCheckCBORTrimmedBytecodeHashTest is ExtrospectEquivalence {
     //forge-lint: disable-next-line(mixed-case-function)

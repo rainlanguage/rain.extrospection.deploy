@@ -2,11 +2,11 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {IExtrospectV1} from "rain-extrospection-0.1.6/src/interface/IExtrospectV1.sol";
-import {LibExtrospectBytecode} from "rain-extrospection-0.1.6/src/lib/LibExtrospectBytecode.sol";
-import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.6/src/lib/LibExtrospectMetamorphic.sol";
-import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.6/src/lib/LibExtrospectERC1167Proxy.sol";
-import {LibExtrospectERC1967BeaconProxy} from "rain-extrospection-0.1.6/src/lib/LibExtrospectERC1967BeaconProxy.sol";
+import {IExtrospectV1} from "rain-extrospection-0.1.13/src/interface/IExtrospectV1.sol";
+import {LibExtrospectBytecode} from "rain-extrospection-0.1.13/src/lib/LibExtrospectBytecode.sol";
+import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.13/src/lib/LibExtrospectMetamorphic.sol";
+import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.13/src/lib/LibExtrospectERC1167Proxy.sol";
+import {LibExtrospectERC1967BeaconProxy} from "rain-extrospection-0.1.13/src/lib/LibExtrospectERC1967BeaconProxy.sol";
 
 /// @title Extrospect
 /// @notice Concrete implementation of `IExtrospectV1`. Parameterless

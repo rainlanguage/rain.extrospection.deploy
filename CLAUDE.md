@@ -68,9 +68,9 @@ Mutation and coverage campaigns: see `.claude/rules/mutation-profile.md`.
 - One contract per `.sol` file. No `@custom:` NatSpec. No skipped tests.
 - Comments describe current behaviour only.
 - Soldeer deps carry the version in the import path, e.g.
-  `rain-extrospection-0.1.6/src/lib/LibExtrospectBytecode.sol`. `recursive_deps`
-  is off, so every package an import resolves through is declared in
-  `foundry.toml`.
+  `rain-extrospection-0.1.13/src/lib/LibExtrospectBytecode.sol`.
+  `recursive_deps` is off, so every package an import resolves through is
+  declared in `foundry.toml`.
 
 ## Deployment and releases
 
