@@ -1,0 +1,8 @@
+name: Git is clean
+on: [push]
+jobs:
+  git-clean:
+    # Shared reusable: rebuild from committed sources (`script/Build.sol` emits
+    # `src/generated/`) and assert nothing committed has drifted.
+    uses: rainlanguage/rainix/.github/workflows/rainix-copy-artifacts.yaml@main
+    secrets: inherit
