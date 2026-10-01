@@ -60,13 +60,19 @@ no_match_contract = "ExtrospectConstantsTest|ExtrospectDeploySnapshotTest"
 # declared here, including `rain-solmem` — reached from `rain-extrospection`'s
 # `LibExtrospectBytecode`.
 [dependencies]
+# Held at the version `rain-deploy` and `rain-sol-codegen` import by path
+# (`forge-std-1.16.2/src/Test.sol` and friends): one version per package, so
+# this cannot move until both of those do.
 forge-std = "1.16.2"
 "rain-extrospection" = "0.1.14"
 "rain-solmem" = "0.1.28"
-"rain-deploy" = "0.1.7"
+"rain-deploy" = "0.1.11"
+# `LibMemoryKV` — reached from `rain-deploy`'s `RainDeployVerifySnapshotBase`,
+# which `ExtrospectDeploySnapshotTest` inherits.
+"rain-lib-memkv" = "0.2.0"
 # `LibRainDeploySnapshot` — reached from `script/Build.sol` and the shipped
 # verify abstracts — emits the generated record via `LibCodeGen`/`LibFs`.
-"rain-sol-codegen" = "0.1.36"
+"rain-sol-codegen" = "0.1.37"
 
 [soldeer]
 recursive_deps = false
@@ -77,24 +83,36 @@ recursive_deps = false
 arbitrum = "${ARBITRUM_RPC_URL}"
 base = "${BASE_RPC_URL}"
 base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
+bsc = "${BSC_RPC_URL}"
 ethereum = "${ETHEREUM_RPC_URL}"
 flare = "${FLARE_RPC_URL}"
 hyperevm = "${HYPEREVM_RPC_URL}"
 polygon = "${POLYGON_RPC_URL}"
+robinhood = "${ROBINHOOD_RPC_URL}"
 
 # `rainix-manual-sol-artifacts` passes `--verify` by default and exports exactly
 # these variable names, so a deploy without this section broadcasts and then
 # fails with no API key configured for the chain. One entry per
 # `[rpc_endpoints]` alias, because the deploy goes to all of them.
 #
-# "chain" is stated on the entries whose alias foundry does not itself resolve
-# to a chain, as foundry raises a config error for an unknown alias with
-# neither "chain" nor "url".
+# Both sections are held to `LibRainDeploy.supportedNetworks()`, in both
+# directions, by the inherited `testSupportedNetworksAreFullyConfigured`, which
+# also requires at least one of "chain" or "url" on every entry: foundry raises
+# a config error for an unknown alias with neither, and that error takes down
+# verification for the whole section. "chain" is stated on every entry rather
+# than only on the aliases foundry cannot resolve, because which aliases those
+# are is foundry's own table. Each stated "chain" is compared against the chain
+# id its `[rpc_endpoints]` alias reports by the inherited
+# `testSupportedNetworkChainIdsAreBound`.
 [etherscan]
-arbitrum = { key = "${CI_DEPLOY_ARBITRUM_ETHERSCAN_API_KEY}" }
-base = { key = "${CI_DEPLOY_BASE_ETHERSCAN_API_KEY}" }
-base_sepolia = { key = "${CI_DEPLOY_BASE_SEPOLIA_ETHERSCAN_API_KEY}" }
+arbitrum = { key = "${CI_DEPLOY_ARBITRUM_ETHERSCAN_API_KEY}", chain = 42161 }
+base = { key = "${CI_DEPLOY_BASE_ETHERSCAN_API_KEY}", chain = 8453 }
+base_sepolia = { key = "${CI_DEPLOY_BASE_SEPOLIA_ETHERSCAN_API_KEY}", chain = 84532 }
+bsc = { key = "${CI_DEPLOY_BSC_ETHERSCAN_API_KEY}", chain = 56 }
 ethereum = { key = "${CI_DEPLOY_ETHEREUM_ETHERSCAN_API_KEY}", chain = 1 }
-flare = { key = "${CI_DEPLOY_FLARE_ETHERSCAN_API_KEY}" }
+flare = { key = "${CI_DEPLOY_FLARE_ETHERSCAN_API_KEY}", chain = 14 }
 hyperevm = { key = "${CI_DEPLOY_HYPEREVM_ETHERSCAN_API_KEY}", chain = 999 }
-polygon = { key = "${CI_DEPLOY_POLYGON_ETHERSCAN_API_KEY}" }
+polygon = { key = "${CI_DEPLOY_POLYGON_ETHERSCAN_API_KEY}", chain = 137 }
+# Robinhood Chain (4663) is not indexed by Etherscan V2; its Blockscout
+# explorer speaks the Etherscan API, so the entry points there.
+robinhood = { key = "${CI_DEPLOY_ROBINHOOD_ETHERSCAN_API_KEY}", chain = 4663, url = "https://robinhoodchain.blockscout.com/api" }

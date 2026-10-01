@@ -7,10 +7,10 @@ integrity = "5fb4325b60d7d4194bd0481e2f94398cf1d9c6561dd12a66fb2748ef4a68205f"
 
 [[dependencies]]
 name = "rain-deploy"
-version = "0.1.7"
-url = "https://soldeer-revisions.s3.amazonaws.com/rain-deploy/0_1_7_19-08-2026_05:57:12_rain.zip"
-checksum = "d0e868184ad16fc6abb704bb1dddab57ebf2beb042529690e030568f5c81a9b3"
-integrity = "e51da6f2b3a0f427a0aac5d7714bed2027f5cf0f39b31f0692e9623ceeaa47f2"
+version = "0.1.11"
+url = "https://soldeer-revisions.s3.amazonaws.com/rain-deploy/0_1_11_19-09-2026_13:21:32_rain.zip"
+checksum = "6d9b6a9bd125acfb0fe96c6fb8c4e6acd0176e40bbf1d98d7077fe1ad29eed26"
+integrity = "72f70b2cd5bfeefb5bf751c0dde1db06d6b63be8a2d3bff0577aa5dca0e92e68"
 
 [[dependencies]]
 name = "rain-extrospection"
@@ -20,11 +20,18 @@ checksum = "a9f34937f66c48c8cd15a700ccebc56c25b6a8af32f0b8757fcfa92be8bbfb56"
 integrity = "4fda4ce47b006de0619aba0591a00cece86454a5867643d99412bc57790cdce0"
 
 [[dependencies]]
+name = "rain-lib-memkv"
+version = "0.2.0"
+url = "https://soldeer-revisions.s3.amazonaws.com/rain-lib-memkv/0_2_0_18-09-2026_21:06:03_rain.lib.zip"
+checksum = "0c00f59f04a2f4c654c8378e66eb1a5acecc33a1cf58052c511b28d0165ce978"
+integrity = "96bc0001f9e06624eb273ab18433846d2a251ed35e26eca5867d08e0b9e343c4"
+
+[[dependencies]]
 name = "rain-sol-codegen"
-version = "0.1.36"
-url = "https://soldeer-revisions.s3.amazonaws.com/rain-sol-codegen/0_1_36_18-08-2026_09:20:33_rain.sol.zip"
-checksum = "b5d101d46941a95fee441224e101004139814ae9afa2793138874bd7e93991ff"
-integrity = "164e2655ac8b66bcf52c799421706d3dfaab987addaaeadd74574e70fd2eb6ed"
+version = "0.1.37"
+url = "https://soldeer-revisions.s3.amazonaws.com/rain-sol-codegen/0_1_37_25-08-2026_17:26:08_rain.sol.zip"
+checksum = "d13ebfc9e769dcd96bf43bd5e0ff9c2894f877949ce5492ae985e70ea10f30b2"
+integrity = "0044af31422ea2e98c480e61c7eba091fbe3bd72c6bc9dcddd3b7457aa6d22f4"
 
 [[dependencies]]
 name = "rain-solmem"
