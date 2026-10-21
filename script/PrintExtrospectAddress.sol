@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Script, console2} from "forge-std-1.16.2/src/Script.sol";
+import {Script, console2} from "forge-std-1.17.0/src/Script.sol";
 import {LibExtrospectDeploy} from "../src/lib/LibExtrospectDeploy.sol";
 
 /// @title PrintExtrospectAddress

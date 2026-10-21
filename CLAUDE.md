@@ -36,8 +36,7 @@ Mutation and coverage campaigns: see `.claude/rules/mutation-profile.md`.
 - `src/concrete/Extrospect.sol` — the deployed contract.
 - `src/abstract/ExtrospectDeploySuites.sol` — the ONE declaration of what this
   repo deploys, inherited by the deploy script, the build script and the
-  verification tests. `src/abstract/RainDeploySuitesBase.sol` re-exports the
-  shipped base so the generated libs' `../abstract/` import resolves.
+  verification tests.
 - `src/generated/candidate/Extrospect.sol` — the rolling deploy snapshot
   (address, codehash, creation + runtime bytecode, dependencies), written by
   `script/Build.sol`. NEVER edit generated files by hand. `src/generated/<tag>/`

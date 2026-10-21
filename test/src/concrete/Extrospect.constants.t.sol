@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std-1.16.2/src/Test.sol";
+import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {Extrospect} from "src/concrete/Extrospect.sol";
 import {
     BYTECODE_HASH,
@@ -11,7 +11,7 @@ import {
     DEPLOYED_ADDRESS,
     RUNTIME_CODE
 } from "src/generated/candidate/Extrospect.sol";
-import {LibRainDeploy} from "rain-deploy-0.1.11/src/lib/LibRainDeploy.sol";
+import {DeployDependency, LibRainDeploy} from "rain-deploy-0.1.18/src/lib/LibRainDeploy.sol";
 
 /// @dev Deterministic Zoltu address recorded for the current V2 candidate
 /// bytecode. The V1 deployment remains live at
@@ -86,7 +86,7 @@ contract ExtrospectConstantsTest is Test {
     /// `Extrospect` reads nothing and calls nothing at construction, so the
     /// snapshot records no dependency that must already be on chain.
     function testExtrospectDependenciesEmpty() external pure {
-        assertEq(abi.decode(DEPENDENCIES, (address[])).length, 0, "generated snapshot records a dependency");
+        assertEq(abi.decode(DEPENDENCIES, (DeployDependency[])).length, 0, "generated snapshot records a dependency");
     }
 
     /// The recorded constants describe one deployment, so they must agree
