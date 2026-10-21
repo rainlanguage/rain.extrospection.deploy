@@ -1,9 +1,25 @@
 name: Manual sol artifacts
 on:
   workflow_dispatch:
+    inputs:
+      suite:
+        description: "Suite to deploy"
+        required: true
+        type: choice
+        options:
+          - extrospect
+          # Frozen release: what a newly supported network needs so the
+          # address consumers pin lands there.
+          - extrospect@0_1_0
+      verify:
+        description: "Verify on the block explorer; off for a frozen release whose bytecode no longer matches current source"
+        required: false
+        type: boolean
+        default: true
 jobs:
   deploy:
     uses: rainlanguage/rainix/.github/workflows/rainix-manual-sol-artifacts.yaml@main
     with:
-      suite: extrospect
+      suite: ${{ inputs.suite }}
+      verify: ${{ inputs.verify }}
     secrets: inherit
