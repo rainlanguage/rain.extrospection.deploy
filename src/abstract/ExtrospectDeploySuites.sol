@@ -5,9 +5,10 @@ pragma solidity ^0.8.25;
 import {
     DeployCandidate,
     DeployDependency,
+    DeployMechanism,
     DeploySuite,
     RainDeploySuitesBase
-} from "rain-deploy-0.1.18/src/abstract/RainDeploySuitesBase.sol";
+} from "rain-deploy-0.1.19/src/abstract/RainDeploySuitesBase.sol";
 import {
     CREATION_CODE as EXTROSPECT_CREATION_CODE_CANDIDATE,
     RUNTIME_CODE as EXTROSPECT_RUNTIME_CODE_CANDIDATE
@@ -55,7 +56,9 @@ abstract contract ExtrospectDeploySuites is RainDeploySuitesBase {
                 storedBytecodeHash: LibExtrospectDeploy.EXTROSPECT_DEPLOYED_CODEHASH,
                 storedRuntimeCode: EXTROSPECT_RUNTIME_CODE_CANDIDATE,
                 artifactPath: "src/concrete/Extrospect.sol:Extrospect",
-                dependencies: new DeployDependency[](0)
+                dependencies: new DeployDependency[](0),
+                mechanism: DeployMechanism.Zoltu,
+                mechanismData: ""
             }),
             unanchorableReason: ""
         });
