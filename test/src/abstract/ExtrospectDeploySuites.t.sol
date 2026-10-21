@@ -2,9 +2,10 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std-1.16.2/src/Test.sol";
-import {DeployCandidate} from "src/abstract/RainDeploySuitesBase.sol";
+import {Test} from "forge-std-1.17.0/src/Test.sol";
+import {DeployCandidate} from "rain-deploy-0.1.18/src/abstract/RainDeploySuitesBase.sol";
 import {ExtrospectDeploySuites} from "src/abstract/ExtrospectDeploySuites.sol";
+import {Extrospect} from "src/concrete/Extrospect.sol";
 
 /// @title ExtrospectDeploySuitesTest
 /// @notice The three fields of the `extrospect` candidate that the verify
@@ -23,16 +24,16 @@ contract ExtrospectDeploySuitesTest is ExtrospectDeploySuites, Test {
     }
 
     /// The artifact path names the contract the candidate is a candidate OF:
-    /// the artifact it compiles to is byte-for-byte the declaration's
-    /// `sourceCreationCode`. A path naming a missing artifact fails to
+    /// the artifact it compiles to is byte-for-byte `Extrospect`'s creation
+    /// code. A path naming a missing artifact fails to
     /// resolve, and one naming some other contract compiles to other bytes —
     /// so both halves of the path are checked, the file and the name.
     function testExtrospectArtifactPathIsTheCandidateContract() external view {
         DeployCandidate memory candidate = extrospectCandidate();
         assertEq(
             keccak256(vm.getCode(candidate.snapshot.artifactPath)),
-            keccak256(candidate.sourceCreationCode),
-            "artifact path does not compile to the candidate's source creation code"
+            keccak256(type(Extrospect).creationCode),
+            "artifact path does not compile to Extrospect"
         );
     }
 
