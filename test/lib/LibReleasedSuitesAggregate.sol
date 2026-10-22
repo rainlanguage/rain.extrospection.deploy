@@ -12,23 +12,28 @@ import {Vm} from "forge-std-1.17.0/src/Vm.sol";
 /// remove.
 library LibReleasedSuitesAggregate {
     /// The contracts an emitted aggregate declares, in the order it imports
-    /// them.
-    ///
-    /// Split on the import statement's own opening rather than parsed, because
-    /// the text is generated: `aggregateImportBlock` emits exactly
-    /// `import {Lib<Contract>Released} from ...` on a line of its own, one per
-    /// contract, and nothing else in the file opens a line that way. The
-    /// `DeploySuite` import does not match — it is not a `Lib` — and the
-    /// library block below the imports never starts a line with `import`.
+    /// them: every `import {Lib<Contract>Released}` line. Other `Lib` imports,
+    /// such as `LibDeploySuiteConcat`, are not contracts.
     /// @param vm The Vm instance for string operations.
     /// @param source An emitted aggregate.
-    /// @return names The contract names, in the order imported.
-    function declaredContractNames(Vm vm, string memory source) internal pure returns (string[] memory names) {
+    /// @return The contract names, in the order imported.
+    function declaredContractNames(Vm vm, string memory source) internal pure returns (string[] memory) {
         string[] memory chunks = vm.split(source, "\nimport {Lib");
 
-        names = new string[](chunks.length - 1);
+        string[] memory found = new string[](chunks.length);
+        uint256 count = 0;
         for (uint256 i = 1; i < chunks.length; i++) {
-            names[i - 1] = vm.split(chunks[i], "Released}")[0];
+            string[] memory parts = vm.split(vm.split(chunks[i], "}")[0], "Released");
+            if (parts.length == 2 && bytes(parts[1]).length == 0) {
+                found[count] = parts[0];
+                count++;
+            }
         }
+
+        string[] memory names = new string[](count);
+        for (uint256 i = 0; i < count; i++) {
+            names[i] = found[i];
+        }
+        return names;
     }
 }
