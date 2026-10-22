@@ -3,7 +3,7 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.17.0/src/Test.sol";
-import {DeployCandidate} from "rain-deploy-0.1.19/src/abstract/RainDeploySuitesBase.sol";
+import {DeployCandidate} from "rain-deploy-0.1.20/src/abstract/RainDeploySuitesBase.sol";
 import {ExtrospectDeploySuites} from "src/abstract/ExtrospectDeploySuites.sol";
 import {Extrospect} from "src/concrete/Extrospect.sol";
 
