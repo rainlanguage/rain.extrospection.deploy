@@ -11,7 +11,7 @@ import {
     DEPLOYED_ADDRESS,
     RUNTIME_CODE
 } from "src/generated/candidate/Extrospect.sol";
-import {DeployDependency, LibRainDeploy} from "rain-deploy-0.1.22/src/lib/LibRainDeploy.sol";
+import {DeployDependency, LibRainDeploy} from "rain-deploy-0.1.25/src/lib/LibRainDeploy.sol";
 
 /// @dev Deterministic Zoltu address recorded for the current V3 candidate
 /// bytecode. The V2 deployment remains live at
