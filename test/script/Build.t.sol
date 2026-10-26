@@ -4,8 +4,8 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {GeneratedContract} from "script/Build.sol";
-import {DeployCandidate} from "rain-deploy-0.1.22/src/abstract/RainDeploySuitesBase.sol";
-import {LibRainDeploySnapshot} from "rain-deploy-0.1.22/src/lib/LibRainDeploySnapshot.sol";
+import {DeployCandidate} from "rain-deploy-0.1.25/src/abstract/RainDeploySuitesBase.sol";
+import {LibRainDeploySnapshot} from "rain-deploy-0.1.25/src/lib/LibRainDeploySnapshot.sol";
 import {LibReleasedSuitesAggregate} from "test/lib/LibReleasedSuitesAggregate.sol";
 import {BuildHarness} from "test/concrete/BuildHarness.sol";
 import {LibStringSet} from "test/lib/LibStringSet.sol";
