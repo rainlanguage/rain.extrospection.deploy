@@ -39,9 +39,11 @@ libs = ["dependencies"]
 # write to this file whatever is granted here.
 # `ExtrospectDeploySnapshotTest`'s inherited frozen-record walk reads
 # `src/generated/` too, so tests need the same read access.
+# `ExtrospectDeployDeclarationTest` reads the dispatch workflow's suite choices.
 fs_permissions = [
   { access = "read", path = "./foundry.toml" },
   { access = "read", path = "./.env.example" },
+  { access = "read", path = ".github/workflows/manual-sol-artifacts.yaml" },
   { access = "read-write", path = "./.staged-config" },
   { access = "read-write", path = "./src" },
 ]
