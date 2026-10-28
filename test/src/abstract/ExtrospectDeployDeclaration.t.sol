@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {RainDeployVerifyDeclaration} from "rain-deploy-0.1.26/src/abstract/RainDeployVerifyDeclaration.sol";
-import {ExternalDeployment} from "rain-deploy-0.1.26/src/abstract/RainDeployDeclarationChecks.sol";
+import {RainDeployVerifyDeclaration} from "rain-deploy-0.1.27/src/abstract/RainDeployVerifyDeclaration.sol";
+import {ExternalDeployment} from "rain-deploy-0.1.27/src/abstract/RainDeployDeclarationChecks.sol";
 import {ExtrospectDeploySuites} from "src/abstract/ExtrospectDeploySuites.sol";
 import {Extrospect} from "src/concrete/Extrospect.sol";
 
