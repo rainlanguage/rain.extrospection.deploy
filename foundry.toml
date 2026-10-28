@@ -73,10 +73,10 @@ no_match_contract = "ExtrospectConstantsTest|ExtrospectDeploySnapshotTest"
 forge-std = "1.17.0"
 "rain-extrospection" = "0.1.16"
 "rain-solmem" = "0.1.28"
-"rain-deploy" = "0.1.26"
+"rain-deploy" = "0.1.27"
 # Held at the versions `rain-deploy` imports by path
 # (`rain-factory-0.2.5/`, `@openzeppelin-contracts-5.7.0/`).
-"rain-factory" = "0.2.5"
+"rain-factory" = "0.2.6"
 "@openzeppelin-contracts" = "5.7.0"
 # `LibRainDeploySnapshot` — reached from `script/Build.sol` and the shipped
 # verify abstracts — emits the generated record via `LibCodeGen`/`LibFs`.
