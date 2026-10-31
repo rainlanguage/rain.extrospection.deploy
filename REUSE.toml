@@ -7,7 +7,6 @@ path = [
   ".github/pull_request_template.md",
   ".github/workflows/**/",
   ".vscode/**/",
-  ".coderabbitai.yaml",
   ".env.example",
   ".gitignore",
   "audit/**/",
