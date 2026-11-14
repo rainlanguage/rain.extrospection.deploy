@@ -19,6 +19,10 @@ import {LibExtrospectDeploy} from "../lib/LibExtrospectDeploy.sol";
 import {LibReleasedSuites} from "../lib/LibReleasedSuites.sol";
 import {Extrospect} from "../concrete/Extrospect.sol";
 
+/// Thrown when a suite key has no source contract in this repo.
+/// @param suite The suite key.
+error NoSourceForSuite(string suite);
+
 /// @title ExtrospectDeploySuites
 /// @notice Everything this repo deploys, declared ONCE: the hand-written
 /// `extrospect` candidate below, and the released side read from the
@@ -49,7 +53,7 @@ abstract contract ExtrospectDeploySuites is RainDeploySuitesBase {
         if (keccak256(bytes(suite)) == keccak256("extrospect")) {
             return type(Extrospect).creationCode;
         }
-        revert(string.concat("no source for suite: ", suite));
+        revert NoSourceForSuite(suite);
     }
 
     /// This repo's rolling `Extrospect` candidate. Named rather than reached
