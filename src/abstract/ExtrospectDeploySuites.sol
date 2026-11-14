@@ -17,6 +17,7 @@ import {LibRainDeployDeclaration} from "rain-deploy-0.1.32/src/lib/LibRainDeploy
 import {LibRainDeployZoltuMechanism} from "rain-deploy-0.1.32/src/lib/LibRainDeployZoltuMechanism.sol";
 import {LibExtrospectDeploy} from "../lib/LibExtrospectDeploy.sol";
 import {LibReleasedSuites} from "../lib/LibReleasedSuites.sol";
+import {Extrospect} from "../concrete/Extrospect.sol";
 
 /// @title ExtrospectDeploySuites
 /// @notice Everything this repo deploys, declared ONCE: the hand-written
@@ -37,7 +38,18 @@ abstract contract ExtrospectDeploySuites is RainDeploySuitesBase {
         DeployCandidate[] memory candidates = new DeployCandidate[](1);
         candidates[0] = extrospectCandidate();
         LibRainDeployDeclaration.addCandidates(declared, candidates);
+        declared.sourceCreationCode = extrospectSourceCreationCode;
         return declared;
+    }
+
+    /// The creation code of the contract `suite` names.
+    /// @param suite The suite key.
+    /// @return The creation code.
+    function extrospectSourceCreationCode(string memory suite) internal pure returns (bytes memory) {
+        if (keccak256(bytes(suite)) == keccak256("extrospect")) {
+            return type(Extrospect).creationCode;
+        }
+        revert(string.concat("no source for suite: ", suite));
     }
 
     /// This repo's rolling `Extrospect` candidate. Named rather than reached
