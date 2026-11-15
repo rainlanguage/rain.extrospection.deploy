@@ -4,17 +4,24 @@ pragma solidity ^0.8.25;
 
 import {
     DeployCandidate,
+    DeployDeclaration,
     DeployDependency,
-    DeployMechanism,
     DeploySuite,
     RainDeploySuitesBase
-} from "rain-deploy-0.1.26/src/abstract/RainDeploySuitesBase.sol";
+} from "rain-deploy-0.1.32/src/abstract/RainDeploySuitesBase.sol";
 import {
     CREATION_CODE as EXTROSPECT_CREATION_CODE_CANDIDATE,
     RUNTIME_CODE as EXTROSPECT_RUNTIME_CODE_CANDIDATE
 } from "../generated/candidate/Extrospect.sol";
+import {LibRainDeployDeclaration} from "rain-deploy-0.1.32/src/lib/LibRainDeployDeclaration.sol";
+import {LibRainDeployZoltuMechanism} from "rain-deploy-0.1.32/src/lib/LibRainDeployZoltuMechanism.sol";
 import {LibExtrospectDeploy} from "../lib/LibExtrospectDeploy.sol";
 import {LibReleasedSuites} from "../lib/LibReleasedSuites.sol";
+import {Extrospect} from "../concrete/Extrospect.sol";
+
+/// Thrown when a suite key has no source contract in this repo.
+/// @param suite The suite key.
+error NoSourceForSuite(string suite);
 
 /// @title ExtrospectDeploySuites
 /// @notice Everything this repo deploys, declared ONCE: the hand-written
@@ -27,19 +34,30 @@ import {LibReleasedSuites} from "../lib/LibReleasedSuites.sol";
 /// process is the product.
 abstract contract ExtrospectDeploySuites is RainDeploySuitesBase {
     /// @inheritdoc RainDeploySuitesBase
-    function releasedSuites() internal pure override returns (DeploySuite[] memory) {
-        return LibReleasedSuites.releasedSuites();
-    }
-
-    /// @inheritdoc RainDeploySuitesBase
-    function candidateSuites() internal pure override returns (DeployCandidate[] memory) {
+    function declaration() internal pure override returns (DeployDeclaration memory) {
+        DeployDeclaration memory declared;
+        LibRainDeployDeclaration.extend(declared);
+        LibRainDeployZoltuMechanism.extend(declared);
+        LibRainDeployDeclaration.addReleased(declared, LibReleasedSuites.releasedSuites());
         DeployCandidate[] memory candidates = new DeployCandidate[](1);
         candidates[0] = extrospectCandidate();
-        return candidates;
+        LibRainDeployDeclaration.addCandidates(declared, candidates);
+        declared.sourceCreationCode = extrospectSourceCreationCode;
+        return declared;
+    }
+
+    /// The creation code of the contract `suite` names.
+    /// @param suite The suite key.
+    /// @return The creation code.
+    function extrospectSourceCreationCode(string memory suite) internal pure returns (bytes memory) {
+        if (keccak256(bytes(suite)) == keccak256("extrospect")) {
+            return type(Extrospect).creationCode;
+        }
+        revert NoSourceForSuite(suite);
     }
 
     /// This repo's rolling `Extrospect` candidate. Named rather than reached
-    /// by index into `candidateSuites`, because `script/Build.sol` emits the
+    /// by index into `declaration().candidates`, because `script/Build.sol` emits the
     /// released-suites lib from THIS candidate specifically, and naming it
     /// keeps the suite key, the artifact path and the dependency list spelled
     /// once.
@@ -57,8 +75,9 @@ abstract contract ExtrospectDeploySuites is RainDeploySuitesBase {
                 storedRuntimeCode: EXTROSPECT_RUNTIME_CODE_CANDIDATE,
                 artifactPath: "src/concrete/Extrospect.sol:Extrospect",
                 dependencies: new DeployDependency[](0),
-                mechanism: DeployMechanism.Zoltu,
-                mechanismData: ""
+                mechanismData: LibRainDeployZoltuMechanism.mechanismData(),
+                networks: new string[](0),
+                describedByMeta: ""
             }),
             unanchorableReason: ""
         });

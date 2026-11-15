@@ -4,24 +4,24 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {GeneratedContract} from "script/Build.sol";
-import {DeployCandidate} from "rain-deploy-0.1.26/src/abstract/RainDeploySuitesBase.sol";
-import {LibRainDeploySnapshot} from "rain-deploy-0.1.26/src/lib/LibRainDeploySnapshot.sol";
+import {DeployCandidate} from "rain-deploy-0.1.32/src/abstract/RainDeploySuitesBase.sol";
+import {LibRainDeploySnapshot} from "rain-deploy-0.1.32/src/lib/LibRainDeploySnapshot.sol";
 import {LibReleasedSuitesAggregate} from "test/lib/LibReleasedSuitesAggregate.sol";
 import {BuildHarness} from "test/concrete/BuildHarness.sol";
 import {LibStringSet} from "test/lib/LibStringSet.sol";
 
 /// @title BuildTest
-/// @notice `script/Build.sol`'s own declaration. `generatedContracts()` is
+/// @notice `script/Build.sol`'s own declaration. `generatedContracts(d)` is
 /// one list for every reader INSIDE `Build`, but what this repo deploys is
-/// declared in `ExtrospectDeploySuites.candidateSuites()`, and the
-/// generator's list is a second hard-coded array in a second file.
+/// declared in `ExtrospectDeploySuites.declaration()`, and the generator's
+/// list is a second hard-coded array in a second file.
 ///
-/// A candidate dropped from `generatedContracts()` by a refactor or a merge
+/// A candidate dropped from `generatedContracts(d)` by a refactor or a merge
 /// still compiles, because its committed snapshot is still there and still
-/// imported — and every release cut after that permanently omits it, with
-/// nothing downstream able to see the hole: `testEveryFrozenSnapshotIsReleased`
-/// walks record -> declaration, so a record entry never written is invisible
-/// to it, and `ExtrospectDeployChainTest` is never handed the omitted suite.
+/// imported, and `checkedGeneratedContracts` refuses it only when the script
+/// runs: `testEveryFrozenSnapshotIsReleased` walks record -> declaration, so a
+/// record entry never written is invisible to it, and
+/// `ExtrospectDeployChainTest` is never handed the omitted suite.
 /// So the agreement of the two lists is asserted here, along with the
 /// properties of the generator's own entries that decide which file each
 /// contract's pins are written into.
@@ -88,11 +88,11 @@ contract BuildTest is Test {
     }
 
     /// PROPERTY: the names a release freezes are EXACTLY the generator's
-    /// contracts. A generated contract missing from `snapshotContractNames()`
-    /// is regenerated on every push and then absent from the frozen tag.
-    function testSnapshotContractNamesAreTheGeneratedContracts() external view {
+    /// contracts. A generated contract missing from `releaseRecordNames()` is
+    /// regenerated on every push and then absent from the frozen tag.
+    function testReleaseRecordNamesAreTheGeneratedContracts() external view {
         GeneratedContract[] memory generated = sBuild.externalGeneratedContracts();
-        string[] memory names = sBuild.externalSnapshotContractNames();
+        string[] memory names = sBuild.externalReleaseRecordNames();
 
         assertEq(
             names.length, generated.length, "a generated contract is not frozen, or a frozen name is not generated"
@@ -152,12 +152,12 @@ contract BuildTest is Test {
     }
 
     /// PROPERTY: the committed aggregate imports the generated contracts in
-    /// `generatedContracts()`'s ORDER, not merely as a set.
+    /// `generatedContracts(d)`'s ORDER, not merely as a set.
     ///
     /// Declaration order is claimed twice — the emitted library documents its
-    /// entries as being "in declaration order" and `snapshotContractNames()`
-    /// documents itself as giving "the order the aggregate emits its entries
-    /// in" — and nothing else pins it: no other test in this repo reads the
+    /// entries as being "in declaration order" and `generatedContracts(d)`
+    /// documents itself as giving "the order its libs are aggregated" — and
+    /// nothing else pins it: no other test in this repo reads the
     /// committed aggregate at all. So the imports and the per-contract locals
     /// can be permuted in the committed file — byte-exactly what the generator
     /// emits for the reordered list — and the whole suite stays green while
@@ -188,15 +188,15 @@ contract BuildTest is Test {
         }
     }
 
-    /// PROPERTY: `snapshotContractNames()` is every `generatedContracts()`
-    /// entry's `contractName`, positionally. The freeze and the aggregate
-    /// reach it only through `forge script`, so a name list shorter than the
-    /// declaration freezes one contract fewer while every other assertion
-    /// here stays green: the tests above read `generatedContracts()` and the
-    /// committed file, neither of which this list passes through.
-    function testSnapshotContractNamesAreTheDeclarationInOrder() external view {
+    /// PROPERTY: `releaseRecordNames()` is every `generatedContracts(d)`
+    /// entry's `contractName`, positionally. The freeze reaches it only
+    /// through `forge script`, so a name list shorter than the declaration
+    /// freezes one contract fewer while every other assertion here stays
+    /// green: the tests above read `generatedContracts(d)` and the committed
+    /// file, neither of which this list passes through.
+    function testReleaseRecordNamesAreTheDeclarationInOrder() external view {
         GeneratedContract[] memory generated = sBuild.externalGeneratedContracts();
-        string[] memory names = sBuild.externalSnapshotContractNames();
+        string[] memory names = sBuild.externalReleaseRecordNames();
 
         assertEq(names.length, generated.length, "a different number of names than generated contracts");
 
