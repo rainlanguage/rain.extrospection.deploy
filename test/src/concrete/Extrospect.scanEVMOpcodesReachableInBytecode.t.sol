@@ -3,7 +3,7 @@
 pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
-import {LibExtrospectBytecode} from "rain-extrospection-0.1.17/src/lib/LibExtrospectBytecode.sol";
+import {LibExtrospectBytecode} from "rain-extrospection-0.1.19/src/lib/LibExtrospectBytecode.sol";
 
 contract ExtrospectScanEVMOpcodesReachableInBytecodeTest is ExtrospectEquivalence {
     /// External re-exposure of the library function so it can be reached via a
