@@ -76,7 +76,6 @@ forge-std = "1.17.0"
 "rain-deploy" = "0.1.33"
 # Held at the version `rain-deploy` imports by path
 # (`@openzeppelin-contracts-5.7.0/`).
-"rain-factory" = "0.2.14"
 "@openzeppelin-contracts" = "5.7.0"
 # `LibRainDeploySnapshot` — reached from `script/Build.sol` and the shipped
 # verify abstracts — emits the generated record via `LibCodeGen`/`LibFs`.
