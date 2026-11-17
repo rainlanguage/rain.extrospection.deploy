@@ -8,7 +8,7 @@ name = "rain-extrospection-deploy"
 # next-version slot. A normal PR does not bump it; only a release moves it.
 # Nothing is published yet, so the first release sets this to the version its
 # `sol-v*` tag names.
-version = "0.1.3"
+version = "0.1.4"
 
 [profile.default]
 src = 'src'
