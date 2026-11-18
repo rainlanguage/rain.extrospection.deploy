@@ -15,6 +15,7 @@ on:
           - extrospect@0_1_2
           - extrospect@0_1_3
           - extrospect@0_1_4
+          - extrospect@0_1_5
       verify:
         description: "Verify on the block explorer; off for a frozen release whose bytecode no longer matches current source"
         required: false
