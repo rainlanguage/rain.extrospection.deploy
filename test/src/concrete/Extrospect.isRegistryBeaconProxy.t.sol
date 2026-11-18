@@ -8,7 +8,7 @@ import {
     REGISTRY_BEACON_PROXY_PREFIX,
     REGISTRY_BEACON_PROXY_SUFFIX,
     REGISTRY_BEACON_PROXY_LENGTH
-} from "rain-extrospection-0.1.19/src/lib/LibExtrospectRegistryBeaconProxy.sol";
+} from "rain-extrospection-0.1.30/src/lib/LibExtrospectRegistryBeaconProxy.sol";
 
 contract ExtrospectIsRegistryBeaconProxyTest is ExtrospectEquivalence {
     function assertIsRegistryBeaconProxyEquivalence(bytes memory bytecode) internal view {

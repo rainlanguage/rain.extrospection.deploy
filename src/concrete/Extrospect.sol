@@ -2,12 +2,12 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {IExtrospectV2} from "rain-extrospection-0.1.19/src/interface/IExtrospectV2.sol";
-import {LibExtrospectBytecode} from "rain-extrospection-0.1.19/src/lib/LibExtrospectBytecode.sol";
-import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.19/src/lib/LibExtrospectMetamorphic.sol";
-import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.19/src/lib/LibExtrospectERC1167Proxy.sol";
-import {LibExtrospectERC1967BeaconProxy} from "rain-extrospection-0.1.19/src/lib/LibExtrospectERC1967BeaconProxy.sol";
-import {LibExtrospectRegistryBeaconProxy} from "rain-extrospection-0.1.19/src/lib/LibExtrospectRegistryBeaconProxy.sol";
+import {IExtrospectV2} from "rain-extrospection-0.1.30/src/interface/IExtrospectV2.sol";
+import {LibExtrospectBytecode} from "rain-extrospection-0.1.30/src/lib/LibExtrospectBytecode.sol";
+import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.30/src/lib/LibExtrospectMetamorphic.sol";
+import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.30/src/lib/LibExtrospectERC1167Proxy.sol";
+import {LibExtrospectERC1967BeaconProxy} from "rain-extrospection-0.1.30/src/lib/LibExtrospectERC1967BeaconProxy.sol";
+import {LibExtrospectRegistryBeaconProxy} from "rain-extrospection-0.1.30/src/lib/LibExtrospectRegistryBeaconProxy.sol";
 
 /// @title Extrospect
 /// @notice Concrete implementation of `IExtrospectV2`. Parameterless
@@ -15,6 +15,12 @@ import {LibExtrospectRegistryBeaconProxy} from "rain-extrospection-0.1.19/src/li
 /// Consumers should depend on `IExtrospectV2` rather than importing this
 /// contract directly.
 contract Extrospect is IExtrospectV2 {
+    /// @inheritdoc IExtrospectV2
+    function beaconImplementation(address beacon) external view returns (bool, address) {
+        // slither-disable-next-line unused-return
+        return LibExtrospectERC1967BeaconProxy.beaconImplementation(beacon);
+    }
+
     /// @inheritdoc IExtrospectV2
     function checkCBORTrimmedBytecodeHash(address account, bytes32 expected) external view {
         LibExtrospectBytecode.checkCBORTrimmedBytecodeHash(account, expected);
@@ -38,6 +44,11 @@ contract Extrospect is IExtrospectV2 {
     /// @inheritdoc IExtrospectV2
     function checkNotMetamorphic(address account) external view {
         LibExtrospectMetamorphic.checkNotMetamorphic(account);
+    }
+
+    /// @inheritdoc IExtrospectV2
+    function codehash(address beacon) external pure returns (bytes32) {
+        return LibExtrospectRegistryBeaconProxy.codehash(beacon);
     }
 
     /// @inheritdoc IExtrospectV2
@@ -67,6 +78,11 @@ contract Extrospect is IExtrospectV2 {
     function isRegistryBeaconProxy(bytes memory bytecode) external pure returns (bool, address) {
         // slither-disable-next-line unused-return
         return LibExtrospectRegistryBeaconProxy.isRegistryBeaconProxy(bytecode);
+    }
+
+    /// @inheritdoc IExtrospectV2
+    function scanConstantsReachableInBytecode(bytes memory bytecode) external pure returns (uint256[] memory) {
+        return LibExtrospectBytecode.scanConstantsReachableInBytecode(bytecode);
     }
 
     /// @inheritdoc IExtrospectV2
