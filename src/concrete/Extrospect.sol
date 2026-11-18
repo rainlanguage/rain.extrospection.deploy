@@ -65,6 +65,7 @@ contract Extrospect is IExtrospectV2 {
 
     /// @inheritdoc IExtrospectV2
     function isRegistryBeaconProxy(bytes memory bytecode) external pure returns (bool, address) {
+        // slither-disable-next-line unused-return
         return LibExtrospectRegistryBeaconProxy.isRegistryBeaconProxy(bytecode);
     }
 
