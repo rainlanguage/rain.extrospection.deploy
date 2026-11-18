@@ -7,8 +7,7 @@ import {LibExtrospectBytecode} from "rain-extrospection-0.1.19/src/lib/LibExtros
 import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.19/src/lib/LibExtrospectMetamorphic.sol";
 import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.19/src/lib/LibExtrospectERC1167Proxy.sol";
 import {LibExtrospectERC1967BeaconProxy} from "rain-extrospection-0.1.19/src/lib/LibExtrospectERC1967BeaconProxy.sol";
-import {LibExtrospectRegistryBeaconProxy} from
-    "rain-extrospection-0.1.19/src/lib/LibExtrospectRegistryBeaconProxy.sol";
+import {LibExtrospectRegistryBeaconProxy} from "rain-extrospection-0.1.19/src/lib/LibExtrospectRegistryBeaconProxy.sol";
 
 /// @title Extrospect
 /// @notice Concrete implementation of `IExtrospectV2`. Parameterless
