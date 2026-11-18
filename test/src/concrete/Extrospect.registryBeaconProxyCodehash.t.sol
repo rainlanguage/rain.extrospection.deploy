@@ -7,19 +7,19 @@ import {
     LibExtrospectRegistryBeaconProxy,
     REGISTRY_BEACON_PROXY_PREFIX,
     REGISTRY_BEACON_PROXY_SUFFIX
-} from "rain-extrospection-0.1.30/src/lib/LibExtrospectRegistryBeaconProxy.sol";
+} from "rain-extrospection-0.1.31/src/lib/LibExtrospectRegistryBeaconProxy.sol";
 
-contract ExtrospectCodehashTest is ExtrospectEquivalence {
+contract ExtrospectRegistryBeaconProxyCodehashTest is ExtrospectEquivalence {
     /// Oracle: `LibExtrospectRegistryBeaconProxy.codehash`.
-    function testCodehashEquivalenceFuzz(address beacon) external view {
-        assertEq(extrospect.codehash(beacon), LibExtrospectRegistryBeaconProxy.codehash(beacon));
+    function testRegistryBeaconProxyCodehashEquivalenceFuzz(address beacon) external view {
+        assertEq(extrospect.registryBeaconProxyCodehash(beacon), LibExtrospectRegistryBeaconProxy.codehash(beacon));
     }
 
     /// Oracle: `extcodehash` of registry beacon proxy runtime bytecode holding `beacon`.
-    function testCodehashMatchesRegistryBeaconProxyExtcodehash(address beacon) external {
+    function testRegistryBeaconProxyCodehashMatchesRegistryBeaconProxyExtcodehash(address beacon) external {
         bytes memory proxy =
             abi.encodePacked(REGISTRY_BEACON_PROXY_PREFIX, uint256(uint160(beacon)), REGISTRY_BEACON_PROXY_SUFFIX);
         vm.etch(address(0xbeef), proxy);
-        assertEq(extrospect.codehash(beacon), address(0xbeef).codehash);
+        assertEq(extrospect.registryBeaconProxyCodehash(beacon), address(0xbeef).codehash);
     }
 }

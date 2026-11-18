@@ -3,7 +3,7 @@
 pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
-import {LibExtrospectBytecode} from "rain-extrospection-0.1.30/src/lib/LibExtrospectBytecode.sol";
+import {LibExtrospectBytecode} from "rain-extrospection-0.1.31/src/lib/LibExtrospectBytecode.sol";
 
 contract ExtrospectScanConstantsReachableInBytecodeTest is ExtrospectEquivalence {
     /// Oracle: `LibExtrospectBytecode.scanConstantsReachableInBytecode`, re-exposed for a raw self-call.

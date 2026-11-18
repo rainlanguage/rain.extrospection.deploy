@@ -2,12 +2,12 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {IExtrospectV2} from "rain-extrospection-0.1.30/src/interface/IExtrospectV2.sol";
-import {LibExtrospectBytecode} from "rain-extrospection-0.1.30/src/lib/LibExtrospectBytecode.sol";
-import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.30/src/lib/LibExtrospectMetamorphic.sol";
-import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.30/src/lib/LibExtrospectERC1167Proxy.sol";
-import {LibExtrospectERC1967BeaconProxy} from "rain-extrospection-0.1.30/src/lib/LibExtrospectERC1967BeaconProxy.sol";
-import {LibExtrospectRegistryBeaconProxy} from "rain-extrospection-0.1.30/src/lib/LibExtrospectRegistryBeaconProxy.sol";
+import {IExtrospectV2} from "rain-extrospection-0.1.31/src/interface/IExtrospectV2.sol";
+import {LibExtrospectBytecode} from "rain-extrospection-0.1.31/src/lib/LibExtrospectBytecode.sol";
+import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.31/src/lib/LibExtrospectMetamorphic.sol";
+import {LibExtrospectERC1167Proxy} from "rain-extrospection-0.1.31/src/lib/LibExtrospectERC1167Proxy.sol";
+import {LibExtrospectERC1967BeaconProxy} from "rain-extrospection-0.1.31/src/lib/LibExtrospectERC1967BeaconProxy.sol";
+import {LibExtrospectRegistryBeaconProxy} from "rain-extrospection-0.1.31/src/lib/LibExtrospectRegistryBeaconProxy.sol";
 
 /// @title Extrospect
 /// @notice Concrete implementation of `IExtrospectV2`. Parameterless
@@ -16,7 +16,7 @@ import {LibExtrospectRegistryBeaconProxy} from "rain-extrospection-0.1.30/src/li
 /// contract directly.
 contract Extrospect is IExtrospectV2 {
     /// @inheritdoc IExtrospectV2
-    function beaconImplementation(address beacon) external view returns (bool, address) {
+    function erc1967BeaconImplementation(address beacon) external view returns (bool, address) {
         // slither-disable-next-line unused-return
         return LibExtrospectERC1967BeaconProxy.beaconImplementation(beacon);
     }
@@ -47,17 +47,21 @@ contract Extrospect is IExtrospectV2 {
     }
 
     /// @inheritdoc IExtrospectV2
-    function codehash(address beacon) external pure returns (bytes32) {
+    function registryBeaconProxyCodehash(address beacon) external pure returns (bytes32) {
         return LibExtrospectRegistryBeaconProxy.codehash(beacon);
     }
 
     /// @inheritdoc IExtrospectV2
-    function isBeaconImplementationBytecode(address beacon, bytes32 expectedRuntimeHash) external view returns (bool) {
+    function isERC1967BeaconImplementationBytecode(address beacon, bytes32 expectedRuntimeHash)
+        external
+        view
+        returns (bool)
+    {
         return LibExtrospectERC1967BeaconProxy.isBeaconImplementationBytecode(beacon, expectedRuntimeHash);
     }
 
     /// @inheritdoc IExtrospectV2
-    function isBeaconOwner(address beacon, address expectedOwner) external view returns (bool) {
+    function isERC1967BeaconOwner(address beacon, address expectedOwner) external view returns (bool) {
         return LibExtrospectERC1967BeaconProxy.isBeaconOwner(beacon, expectedOwner);
     }
 
