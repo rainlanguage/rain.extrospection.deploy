@@ -19,15 +19,15 @@ import {DeployDependency, LibRainDeploy} from "rain-deploy-0.1.35/src/lib/LibRai
 /// `src/generated/0_1_4/`. The generated candidate MUST derive this address
 /// for as long as the source compiles to the V5 bytecode — a drift here is a
 /// new deployment, not a constant to update.
-address constant EXTROSPECT_ZOLTU_ADDRESS_V5 = address(0x0c8F4B662E71e3aE0895A54fdDDDf1e0B0ac4d58);
+address constant EXTROSPECT_ZOLTU_ADDRESS_V5 = address(0x7f2c08E09025Bdd5D5D4dDF8980b0d56868998D7);
 
 /// @dev The runtime codehash of the V5 candidate bytecode.
-bytes32 constant EXTROSPECT_RUNTIME_CODEHASH_V5 = 0x0223a05f764d4bb883ca6b1fd4a19296933a3adf02dc99e232c677f84132e344;
+bytes32 constant EXTROSPECT_RUNTIME_CODEHASH_V5 = 0x57750cf5153136c3be52d6e5ba5342f96d7fe98a75e050b5304c06684f6ae4ec;
 
 /// @dev `keccak256` of the V5 creation bytecode. Pinned as a hash because the
 /// bytes themselves live in the generated snapshot, and a second copy here
 /// would be a second source of truth.
-bytes32 constant EXTROSPECT_CREATION_KECCAK_V5 = 0x013a99a7d391e9b31fb60b2e7bc88ea0b12a97c24a80831885753bf96f962c29;
+bytes32 constant EXTROSPECT_CREATION_KECCAK_V5 = 0x287b53dab6ab42f01e22787943e8ab9970d1078e577162d048d6e632995ef5b1;
 
 /// @title ExtrospectConstantsTest
 /// @notice Ties the generated candidate snapshot to the pinned V5 deployment

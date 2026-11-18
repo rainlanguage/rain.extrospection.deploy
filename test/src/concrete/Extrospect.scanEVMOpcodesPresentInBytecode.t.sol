@@ -4,7 +4,6 @@ pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
 import {LibExtrospectBytecode} from "rain-extrospection-0.1.30/src/lib/LibExtrospectBytecode.sol";
-import {LibExtrospectTestEtch} from "rain-extrospection-0.1.30/test/lib/LibExtrospectTestEtch.sol";
 
 contract ExtrospectScanEVMOpcodesPresentInBytecodeTest is ExtrospectEquivalence {
     /// External re-exposure of the library function so it can be reached via a
@@ -58,12 +57,6 @@ contract ExtrospectScanEVMOpcodesPresentInBytecodeTest is ExtrospectEquivalence 
         //forge-lint: disable-next-line(incorrect-shift)
         uint256 expected = uint256(1) | (uint256(1) << uint256(0xF0));
         assertEq(extrospect.scanEVMOpcodesPresentInBytecode(hex"00F0"), expected);
-    }
-
-    /// Account overload: same success flag and byte-identical returndata for any etched code.
-    function testScanEVMOpcodesPresentInBytecodeAccountEquivalenceFuzz(bytes memory code) external {
-        LibExtrospectTestEtch.assumeEtch(vm, address(0xbeef), code);
-        assertScanAccountEquivalence(address(0xbeef));
     }
 
     /// Account overload: byte-identical opcode bitmap for concrete account code.

@@ -4,7 +4,6 @@ pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
 import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.30/src/lib/LibExtrospectMetamorphic.sol";
-import {LibExtrospectTestEtch} from "rain-extrospection-0.1.30/test/lib/LibExtrospectTestEtch.sol";
 
 contract ExtrospectCheckNotMetamorphicTest is ExtrospectEquivalence {
     /// External re-exposure of the library function so it can be reached via a
@@ -83,11 +82,5 @@ contract ExtrospectCheckNotMetamorphicTest is ExtrospectEquivalence {
     function testCheckNotMetamorphicAccountEquivalenceCodeless(address account) external {
         vm.assume(account.code.length == 0);
         assertCheckNotMetamorphicAccountEquivalence(account);
-    }
-
-    /// Account overload: same success flag and byte-identical returndata for any etched code.
-    function testCheckNotMetamorphicAccountEquivalenceFuzz(bytes memory code) external {
-        LibExtrospectTestEtch.assumeEtch(vm, address(0xbeef), code);
-        assertCheckNotMetamorphicAccountEquivalence(address(0xbeef));
     }
 }

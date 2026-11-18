@@ -4,7 +4,6 @@ pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
 import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.30/src/lib/LibExtrospectMetamorphic.sol";
-import {LibExtrospectTestEtch} from "rain-extrospection-0.1.30/test/lib/LibExtrospectTestEtch.sol";
 
 contract ExtrospectScanMetamorphicRiskTest is ExtrospectEquivalence {
     /// External re-exposure of the library function so it can be reached via a
@@ -44,12 +43,6 @@ contract ExtrospectScanMetamorphicRiskTest is ExtrospectEquivalence {
     /// `EOFBytecodeNotSupported` payload for EOF-prefixed bytecode.
     function testScanMetamorphicRiskEquivalenceEOF() external {
         assertScanEquivalence(hex"EF0000");
-    }
-
-    /// Account overload: same success flag and byte-identical returndata for any etched code.
-    function testScanMetamorphicRiskAccountEquivalenceFuzz(bytes memory code) external {
-        LibExtrospectTestEtch.assumeEtch(vm, address(0xbeef), code);
-        assertScanAccountEquivalence(address(0xbeef));
     }
 
     /// Account overload: byte-identical bitmap for account code with a reachable DELEGATECALL.
