@@ -4,6 +4,7 @@ pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
 import {LibExtrospectBytecode} from "rain-extrospection-0.1.19/src/lib/LibExtrospectBytecode.sol";
+import {LibExtrospectTestEtch} from "rain-extrospection-0.1.19/test/lib/LibExtrospectTestEtch.sol";
 
 contract ExtrospectScanEVMOpcodesPresentInBytecodeTest is ExtrospectEquivalence {
     /// External re-exposure of the library function so it can be reached via a
@@ -12,9 +13,21 @@ contract ExtrospectScanEVMOpcodesPresentInBytecodeTest is ExtrospectEquivalence 
         return LibExtrospectBytecode.scanEVMOpcodesPresentInBytecode(bytecode);
     }
 
+    function _libScanAccount(address account) external view returns (uint256) {
+        return LibExtrospectBytecode.scanEVMOpcodesPresentInBytecode(account);
+    }
+
     function assertScanEquivalence(bytes memory bytecode) internal {
         assertEquivalence(
-            extrospect.scanEVMOpcodesPresentInBytecode.selector, this._libScan.selector, abi.encode(bytecode)
+            bytes4(keccak256("scanEVMOpcodesPresentInBytecode(bytes)")), this._libScan.selector, abi.encode(bytecode)
+        );
+    }
+
+    function assertScanAccountEquivalence(address account) internal {
+        assertEquivalence(
+            bytes4(keccak256("scanEVMOpcodesPresentInBytecode(address)")),
+            this._libScanAccount.selector,
+            abi.encode(account)
         );
     }
 
@@ -45,5 +58,37 @@ contract ExtrospectScanEVMOpcodesPresentInBytecodeTest is ExtrospectEquivalence 
         //forge-lint: disable-next-line(incorrect-shift)
         uint256 expected = uint256(1) | (uint256(1) << uint256(0xF0));
         assertEq(extrospect.scanEVMOpcodesPresentInBytecode(hex"00F0"), expected);
+    }
+
+    /// Account overload: same success flag and byte-identical returndata for any etched code.
+    function testScanEVMOpcodesPresentInBytecodeAccountEquivalenceFuzz(bytes memory code) external {
+        LibExtrospectTestEtch.assumeEtch(vm, address(0xbeef), code);
+        assertScanAccountEquivalence(address(0xbeef));
+    }
+
+    /// Account overload: byte-identical opcode bitmap for concrete account code.
+    function testScanEVMOpcodesPresentInBytecodeAccountEquivalenceConcrete() external {
+        vm.etch(address(0xbeef), hex"60016002F3");
+        assertScanAccountEquivalence(address(0xbeef));
+    }
+
+    /// Account overload: byte-identical `EOFBytecodeNotSupported` payload for EOF account code.
+    function testScanEVMOpcodesPresentInBytecodeAccountEquivalenceEOF() external {
+        vm.etch(address(0xbeef), hex"EF0000");
+        assertScanAccountEquivalence(address(0xbeef));
+    }
+
+    /// Account overload: byte-identical `CodelessAccount` payload for any codeless account.
+    function testScanEVMOpcodesPresentInBytecodeAccountEquivalenceCodeless(address account) external {
+        vm.assume(account.code.length == 0);
+        assertScanAccountEquivalence(account);
+    }
+
+    /// Account overload: STOP then CREATE reports both present bits.
+    function testScanEVMOpcodesPresentInBytecodeAccountUnreachableCreateCounted() external {
+        vm.etch(address(0xbeef), hex"00F0");
+        //forge-lint: disable-next-line(incorrect-shift)
+        uint256 expected = uint256(1) | (uint256(1) << uint256(0xF0));
+        assertEq(extrospect.scanEVMOpcodesPresentInBytecode(address(0xbeef)), expected);
     }
 }
