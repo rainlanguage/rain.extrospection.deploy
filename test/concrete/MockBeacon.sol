@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {IBeacon} from "rain-extrospection-0.1.19/src/interface/IBeacon.sol";
-import {IOwnable} from "rain-extrospection-0.1.19/src/interface/IOwnable.sol";
+import {IBeacon} from "rain-extrospection-0.1.31/src/interface/IBeacon.sol";
+import {IOwnable} from "rain-extrospection-0.1.31/src/interface/IOwnable.sol";
 
 /// @dev Minimal beacon test fixture implementing both `IBeacon` and
 /// `IOwnable` so selector and return-type match the lib's expectations

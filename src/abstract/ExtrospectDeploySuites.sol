@@ -8,13 +8,13 @@ import {
     DeployDependency,
     DeploySuite,
     RainDeploySuitesBase
-} from "rain-deploy-0.1.33/src/abstract/RainDeploySuitesBase.sol";
+} from "rain-deploy-0.1.36/src/abstract/RainDeploySuitesBase.sol";
 import {
     CREATION_CODE as EXTROSPECT_CREATION_CODE_CANDIDATE,
     RUNTIME_CODE as EXTROSPECT_RUNTIME_CODE_CANDIDATE
 } from "../generated/candidate/Extrospect.sol";
-import {LibRainDeployDeclaration} from "rain-deploy-0.1.33/src/lib/LibRainDeployDeclaration.sol";
-import {LibRainDeployZoltuMechanism} from "rain-deploy-0.1.33/src/lib/LibRainDeployZoltuMechanism.sol";
+import {LibRainDeployDeclaration} from "rain-deploy-0.1.36/src/lib/LibRainDeployDeclaration.sol";
+import {LibRainDeployZoltuMechanism} from "rain-deploy-0.1.36/src/lib/LibRainDeployZoltuMechanism.sol";
 import {LibExtrospectDeploy} from "../lib/LibExtrospectDeploy.sol";
 import {LibReleasedSuites} from "../lib/LibReleasedSuites.sol";
 import {Extrospect} from "../concrete/Extrospect.sol";
