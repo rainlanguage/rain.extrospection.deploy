@@ -4,6 +4,7 @@ pragma solidity =0.8.25;
 
 import {ExtrospectEquivalence} from "test/concrete/ExtrospectEquivalence.sol";
 import {LibExtrospectMetamorphic} from "rain-extrospection-0.1.19/src/lib/LibExtrospectMetamorphic.sol";
+import {LibExtrospectTestEtch} from "rain-extrospection-0.1.19/test/lib/LibExtrospectTestEtch.sol";
 
 contract ExtrospectCheckNotMetamorphicTest is ExtrospectEquivalence {
     /// External re-exposure of the library function so it can be reached via a
@@ -12,9 +13,23 @@ contract ExtrospectCheckNotMetamorphicTest is ExtrospectEquivalence {
         LibExtrospectMetamorphic.checkNotMetamorphic(bytecode);
     }
 
+    function libCheckNotMetamorphicAccountExternal(address account) external view {
+        LibExtrospectMetamorphic.checkNotMetamorphic(account);
+    }
+
     function assertCheckNotMetamorphicEquivalence(bytes memory bytecode) internal {
         assertEquivalence(
-            extrospect.checkNotMetamorphic.selector, this.libCheckNotMetamorphicExternal.selector, abi.encode(bytecode)
+            bytes4(keccak256("checkNotMetamorphic(bytes)")),
+            this.libCheckNotMetamorphicExternal.selector,
+            abi.encode(bytecode)
+        );
+    }
+
+    function assertCheckNotMetamorphicAccountEquivalence(address account) internal {
+        assertEquivalence(
+            bytes4(keccak256("checkNotMetamorphic(address)")),
+            this.libCheckNotMetamorphicAccountExternal.selector,
+            abi.encode(account)
         );
     }
 
@@ -44,5 +59,35 @@ contract ExtrospectCheckNotMetamorphicTest is ExtrospectEquivalence {
     /// same success flag and byte-identical returndata on both sides.
     function testCheckNotMetamorphicEquivalenceFuzz(bytes memory bytecode) external {
         assertCheckNotMetamorphicEquivalence(bytecode);
+    }
+
+    /// Account overload: concrete and library both pass for clean account code.
+    function testCheckNotMetamorphicAccountEquivalencePass() external {
+        vm.etch(address(0xbeef), hex"60016002F3");
+        assertCheckNotMetamorphicAccountEquivalence(address(0xbeef));
+    }
+
+    /// Account overload: byte-identical `Metamorphic` payload for risky account code.
+    function testCheckNotMetamorphicAccountEquivalenceRevert() external {
+        vm.etch(address(0xbeef), hex"60006000600060006000F4");
+        assertCheckNotMetamorphicAccountEquivalence(address(0xbeef));
+    }
+
+    /// Account overload: byte-identical `Metamorphic` payload for `0xEF`-led account code.
+    function testCheckNotMetamorphicAccountEquivalenceEOF() external {
+        vm.etch(address(0xbeef), hex"EF0000");
+        assertCheckNotMetamorphicAccountEquivalence(address(0xbeef));
+    }
+
+    /// Account overload: byte-identical `CodelessAccount` payload for any codeless account.
+    function testCheckNotMetamorphicAccountEquivalenceCodeless(address account) external {
+        vm.assume(account.code.length == 0);
+        assertCheckNotMetamorphicAccountEquivalence(account);
+    }
+
+    /// Account overload: same success flag and byte-identical returndata for any etched code.
+    function testCheckNotMetamorphicAccountEquivalenceFuzz(bytes memory code) external {
+        LibExtrospectTestEtch.assumeEtch(vm, address(0xbeef), code);
+        assertCheckNotMetamorphicAccountEquivalence(address(0xbeef));
     }
 }
