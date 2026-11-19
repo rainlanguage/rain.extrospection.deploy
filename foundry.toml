@@ -73,7 +73,7 @@ no_match_contract = "ExtrospectConstantsTest|ExtrospectDeploySnapshotTest"
 forge-std = "1.17.0"
 "rain-extrospection" = "0.1.31"
 "rain-solmem" = "0.1.28"
-"rain-deploy" = "0.1.36"
+"rain-deploy" = "0.1.37"
 # Held at the version `rain-deploy` imports by path
 # (`@openzeppelin-contracts-5.7.0/`).
 "@openzeppelin-contracts" = "5.7.0"
